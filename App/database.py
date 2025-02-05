@@ -1,16 +1,26 @@
 import sqlite3
 
-
-# cursor.execute("CREATE TABLE pessoas (nome text,idade integer, email text)")
-
-# cursor.execute("INSERT INTO pessoas VALUES('Maria', 16, 'mariadb@gmail.com')")
-nome = "Renato"
-idade = 16
-email = "dwm@gmail.com"
-
-banco = sqlite3.connect('banco_tarefas.db')
-cursor = banco.cursor()
+try:
+    # Conectando ao banco de dados
+    banco_tarefa = sqlite3.connect('App/database/tarefas.db')
+    cursor = banco_tarefa.cursor()
     
-cursor.execute("INSERT INTO pessoas VALUES({},{},{})".format(nome,str(idade),email))
-banco.commit()
-print("Os dados foram adicionados com sucesso!!")
+    # Cria a tabela    
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS tarefas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            titulo TEXT NOT NULL,
+            status INTEGER NOT NULL DEFAULT 0
+        )
+    """)
+    # Commit do banco
+    banco_tarefa.commit()
+    # Fecha cursor
+    cursor.close()
+except sqlite3.Error as error:
+    print(f'Ocorreu algum erro: {error}')
+finally:
+    if cursor:
+        cursor.close()
+    if banco_tarefa:
+        banco_tarefa.close()
