@@ -6,13 +6,13 @@ class Tarefas:
         self.status = status
     
     def __str__(self):
-        return f'Objeto criado a partir da definição CRUD'
+        return f'{self.titulo} = [{self.status}]'
     
     def criar_tarefa(self,titulo):
         try:
             banco_tarefa = sqlite3.connect('App/database/tarefas.db')
             cursor = banco_tarefa.cursor()
-            cursor.execute(f'INSERT INTO tarefas VALUE({self.id},{self.titulo},{self.status})')
+            cursor.execute('INSERT INTO tarefas VALUES(titulo = ?,status = 0)')
             banco_tarefa.commit()
             cursor.close()
             banco_tarefa.close()
@@ -42,10 +42,11 @@ class Tarefas:
     def atualizar_tarefa(self,id,status):
         try:
             banco_tarefa = sqlite3.connect('App/database/tarefas.db')
-            cursor = banco_tarefa.cursor()
-            
-            
-            cursor.execute("UPDATE tarefas SET")
+            cursor = banco_tarefa.cursor()            
+            cursor.execute(f"UPDATE tarefas SET status = {self.status} WHERE = {self.id}") # USAR O ? PARA PLACEHOLDER 
+            banco_tarefa.commit()
+            cursor.close()
+            banco_tarefa.close()
         except sqlite3.Error as error:
             print(f"Ocorreu um erro: {error}")
         finally:
@@ -56,4 +57,18 @@ class Tarefas:
                 
     def excluir_tarefas(self,id):
         pass
+        try:
+            banco_tarefa = sqlite3.connect('App/database/tarefas.db')
+            cursor = banco_tarefa.cursor()            
+            cursor.execute(f"DELETE FROM tarefas WHERE id = {id}")
+            banco_tarefa.commit()
+            cursor.close()
+            banco_tarefa.close()
+        except sqlite3.Error as error:
+            print(f"Ocorreu um erro: {error}")
+        finally:
+            if cursor:
+                cursor.close()
+            if banco_tarefa:
+                banco_tarefa.close()
     
