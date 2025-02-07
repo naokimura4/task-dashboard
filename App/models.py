@@ -1,4 +1,6 @@
 import sqlite3
+
+# Criação do CRUD
 class Tarefas:
     def __init__(self,id,titulo,status):
         self.id = id
@@ -12,10 +14,9 @@ class Tarefas:
         try:
             banco_tarefa = sqlite3.connect('App/database/tarefas.db')
             cursor = banco_tarefa.cursor()
-            cursor.execute('INSERT INTO tarefas VALUES(titulo = ?,status = 0)')
+            status = 0
+            cursor.execute('INSERT INTO tarefas (titulo, status) VALUES(?, ?)',(titulo, status))
             banco_tarefa.commit()
-            cursor.close()
-            banco_tarefa.close()
             
         except sqlite3.Error as error:
             print(f"Ocorreu um erro: {error}")
@@ -56,7 +57,6 @@ class Tarefas:
                 banco_tarefa.close()
                 
     def excluir_tarefas(self,id):
-        pass
         try:
             banco_tarefa = sqlite3.connect('App/database/tarefas.db')
             cursor = banco_tarefa.cursor()            
